@@ -1,0 +1,1108 @@
+2014-07-18  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* configure.ac: Bump to 1.0.1.
+
+2014-07-18  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR1877: Code not updated in accordance with
+	name changes in PR1840
+	* Makefile.am:
+	(ICEDTEA_SOUND_JAVA_GENDIR): Reference to generated
+	source files present in the build directory.
+	(ICEDTEA_SOUND_JAVA_SRCS): Include Config.java
+	(IT_PKGS): Include org.classpath.icedtea
+	(docs): Include ICEDTEA_SOUND_JAVA_GENDIR in sourcepath
+	and include source code in output.
+	* NEWS: Updated.
+	* configure.ac:
+	Add Config.java to AC_CONFIG_FILES.
+	* src/java/org/classpath/icedtea/Config.java.in:
+	Template filled out by configure so Java can access
+	the package name, version, etc.
+	* src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java:
+	Add missing copyright header and replace
+	static reference to "pulse-java" with package name.
+
+2014-07-18  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR1876: The following shared libraries lack a
+	SONAME: /usr/lib64/libicedtea-sound.so
+	* Makefile.am:
+	(TARGET_NAME): Added to store target library name.
+	(LIBRARY_NAME): Added to store fully versioned
+	library name.
+	(all-local): Move docs down to icedtea-sound level.
+	(install-exec-local): Install the library with
+	the version in its name and an unversioned symlink
+	to it.
+	(install-data-local): Depend on docs.
+	(uninstall-local): Delete both library and symlink.
+	(icedtea-sound): Depend on docs.
+	($(ICEDTEA_SOUND_NATIVE_BUILDDIR)/$(TARGET_NAME)):
+	Set soname to $(LIBRARY_NAME) when building library.
+	* NEWS: Updated.
+
+2014-07-18  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* NEWS: Set release date.
+	* configure.ac: Bump to 1.0.0.
+
+2014-07-18  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR1842: Linker does not check that symbols can
+	be resolved for libpulse-java.so
+	* Makefile.am:
+	(LDFLAGS): Pass -z defs to linker.
+	* NEWS: Updated.
+
+2014-07-16  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR1840: Replace Makefile.am references to PULSE_JAVA
+	with ICEDTEA_SOUND
+	* Makefile.am:
+	(ICEDTEA_SOUND_DIR): Renamed from PULSE_JAVA_DIR.
+	(ICEDTEA_SOUND_NATIVE_SRCDIR): Renamed from PULSE_JAVA_NATIVE_SRCDIR.
+	(ICEDTEA_SOUND_NATIVE_SRCS): Renamed from PULSE_JAVA_NATIVE_SRCS.
+	(ICEDTEA_SOUND_JAVA_SRCDIR): Renamed from PULSE_JAVA_JAVA_SRCDIR.
+	(ICEDTEA_SOUND_BUILDDIR): Renamed from PULSE_JAVA_BUILDDIR.
+	(ICEDTEA_SOUND_NATIVE_BUILDDIR): Renamed from PULSE_JAVA_NATIVE_BUILDDIR.
+	(ICEDTEA_SOUND_NATIVE_OBJECTS): Renamed from PULSE_JAVA_NATIVE_OBJECTS.
+	(ICEDTEA_SOUND_CLASS_DIR): Renamed from PULSE_JAVA_CLASS_DIR.
+	(ICEDTEA_SOUND_JAVA_SRCS): Renamed from PULSEAUDIO_JAVA_SRCS.
+	(ICEDTEA_SOUND_SRCS): Renamed from PULSEAUDIO_SRCS.
+	(EXTRA_DIST): Updated.
+	(all-local): Likewise.
+	(clean-local): Likewise.
+	(.PHONY): Likewise.
+	(install-exec-local): Likewise.
+	(install-data-local): Likewise.
+	(uninstall-local): Likewise.
+	(icedtea-sound): Renamed from pulse-java.
+	(icedtea-sound-class): Renamed from pulse-java-class.
+	(icedtea-sound-jar): Renamed from pulse-java-jar.
+	(icedtea-sound-headers): Renamed from pulse-java-headers.
+	($(ICEDTEA_SOUND_NATIVE_BUILDDIR)/%.o): Renamed from
+	$(PULSE_JAVA_NATIVE_BUILDDIR)/%.o
+	($(ICEDTEA_SOUND_NATIVE_BUILDDIR)/libicedtea-sound.so):
+	Renamed from $(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so.
+	(clean-icedtea-sound): Renamed from clean-pulse-java.
+	(docs): Updated.
+	* NEWS: Updated.
+	* README: List class name of PulseAudio provider.
+
+2014-06-11  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	PR1741: Break PulseAudio provider out into IcedTea-Sound
+	Initial import into IcedTea-Sound.
+	* .hgignore,
+	* AUTHORS,
+	* COPYING,
+	* ChangeLog,
+	* Makefile.am,
+	* NEWS,
+	* README,
+	* acinclude.m4,
+	* autogen.sh,
+	* configure.ac,
+	* javac.in,
+	* src/java/META-INF/services/javax.sound.sampled.spi.MixerProvider,
+	* src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java,
+	* src/java/org/classpath/icedtea/pulseaudio/ContextListener.java,
+	* src/java/org/classpath/icedtea/pulseaudio/Debug.java,
+	* src/java/org/classpath/icedtea/pulseaudio/EventLoop.java,
+	* src/java/org/classpath/icedtea/pulseaudio/Operation.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerInfo.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java,
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java,
+	* src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java,
+	* src/java/org/classpath/icedtea/pulseaudio/Stream.java,
+	* src/java/org/classpath/icedtea/pulseaudio/StreamBufferAttributes.java,
+	* src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java,
+	* src/native/jni-common.c,
+	* src/native/jni-common.h,
+	* src/native/org_classpath_icedtea_pulseaudio_ContextEvent.c,
+	* src/native/org_classpath_icedtea_pulseaudio_EventLoop.c,
+	* src/native/org_classpath_icedtea_pulseaudio_Operation.c,
+	* src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c,
+	* src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c,
+	* src/native/org_classpath_icedtea_pulseaudio_Stream.c,
+	* testsounds/README,
+	* unittests/org/classpath/icedtea/pulseaudio/OtherSoundProvidersAvailableTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioEventLoopOverhead.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerProviderTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerRawTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioMixerTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineRawTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLineTest.java,
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java:
+	Added and updated.
+
+2012-06-28  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(getMicrosecondLength, getMicrosecondPosition)
+	(setMicrosecondPosition): Use correct factor to convert seconds to
+	microseconds.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(getMicrosecondPosition): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java:
+	Define SECONDS_TO_MICROSECONDS.
+
+2012-06-28  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Synchronize access to writeInterrupted flag.
+
+2012-06-28  Omair Majid  <omajid@redhat.com>
+
+	* NEWS: Update with fix.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java:
+	Add new member variable contextPointer.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1new):
+	Save j_context as contextPointer.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1unref):
+	Delete the global ref and dellocate the java context.
+	(cork_callback): Don't check userdata. It is NULL.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1cork):
+	Dont allocate and pass a java_context to pa_stream_cork. It is not needed.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testOpenCloseLotsOfTimes): New method.
+
+2011-10-03  Xerxes Rånby  <xerxes@zafena.se>
+	    Robert Lougher <rob@jamvm.org.uk>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	  (Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1get_1buffer_1attr):
+	  Make code compliant to the JNI specification.
+	  Enable pulseaudio to work in combination with JVM that strictly
+	  implement JNI spec.
+
+2011-10-03  Xerxes Rånby  <xerxes@zafena.se>
+	    David Henningsson <david.henningsson@canonical.com>
+	    Matthias Klose <doko@ubuntu.com>
+
+	LP862286
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	  (context_change_callback):
+	  Fix exception on trying to start PulseAudio playback on ARM.
+
+2011-09-29  Xerxes Rånby  <xerxes@zafena.se>
+	    David Henningsson <david.henningsson@canonical.com>
+
+	LP862286
+	* NEWS: Updated.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/
+	  PulseAudioDataLine.java (addStreamListeners): 
+	  Fix exception on trying to start PulseAudio playback.
+
+2011-06-20  Denis Lila  <dlila@redhat.com>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(SET_STREAM_ENUM): Add an underscore after java_prefix so that
+	the produced string matches the names in Stream.java.
+
+2011-06-20  Denis Lila  <dlila@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(bufferSize): Remove.
+	(getBufferSize): Return stream.getBufferSize().
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(connectLine): Improve formatting.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(connectLine): Set up flags to adjust the latency, if needed.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(bufAttr, bufAttrMutex): New members.
+	(setBufAttr, bufferAttrCallback): New methods. They both set bufAttr.
+	(getBufferSize): Return the current buffer size.
+	(connectForRecording): Add a flags argument to allow callers to chose the
+	flags.
+	(stateCallback): When the stream is ready, set the buffer attributes to
+	the actual ones used by the server.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(buf_attr_changed_callback): New function. 
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1new):
+	Set the buffer attribute callback.
+
+2011-06-17  Denis Lila  <dlila@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(FLAG_NOFLAGS, FLAG_START_CORKED, FLAG_INTERPOLATE_TIMING,
+	 FLAG_NOT_MONOTONIC, FLAG_AUTO_TIMING_UPDATE, FLAG_NO_REMAP_CHANNELS,
+	 FLAG_NO_REMIX_CHANNELS, FLAG_FIX_FORMAT, FLAG_FIX_RATE,
+	 FLAG_FIX_CHANNELS, FLAG_DONT_MOVE, FLAG_VARIABLE_RATE, FLAG_PEAK_DETECT,
+	 FLAG_START_MUTED, FLAG_ADJUST_LATENCY, FLAG_EARLY_REQUESTS,
+	 FLAG_DONT_INHIBIT_AUTO_SUSPEND, FLAG_START_UNMUTED, FLAG_FAIL_ON_SUSPEND):
+	New static long variables mirroring pa_stream_flag_t values.
+	(STATE_UNCONNECTED, STATE_CREATING, STATE_READY, STATE_FAILED,
+	 STATE_TERMINATED): Add the STATE_ prefix to distinguish them from
+	the flag variables.
+	(native_pa_stream_connect_playback, native_pa_stream_connect_record):
+	Change flags parameter to long.
+	(connectForPlayback, connectForRecording): Start the stream corked.
+	Change formatting to make it more readable.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(SET_STREAM_ENUM): Renamed from SET_STREAM_STATE_ENUM, since the
+	macro could have been used for any PA_STREAM constants, not just
+	stream states (and indeed, we now use it for flag constants too).
+	(Java_org_classpath_icedtea_pulseaudio_Stream_init_1constants):
+	Initialize flag constants in addition to the stream states.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1connect_1playback):
+	Change flags parameter to jlong (from jint), remove commented out
+	dead code, remove obsolete comment, and start the stream with whatever
+	flags were passed in the flags parameter, instead of ignoring that
+	parameter and using PA_STREAM_START_CORKED.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1connect_1record):
+	Change flags parameter to jlong (from jint), remove commented out
+	dead code.
+
+2011-06-16  Denis Lila  <dlila@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(addStreamListeners): Remove this.notifyAll() from
+	openCloseListener.update; change this.notifyAll() to
+	PulseAudioDataLine.this.notifyAll() in startedListener.update.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(read): Put fragmentBuffer null check in the synchronized block.
+	(flush): Make it synchronized to avoid race condition with read().
+
+2011-06-16  Denis Lila  <dlila@redhat.com>
+
+	* Makefile.am: Add ContextEvent to the list of pulse audio classes that
+	need javah run on them.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java
+	(Type): Remove and replace with...
+	(UNCONNECTED, CONNECTING, AUTHORIZING, SETTING_NAME, READY, FAILED,
+	 TERMINATED): New static long variables replacing enum Type.
+	(init_constants): New native method to initialize the above variables.
+	(checkNativeEnumReturn): Make sure that the input is one of the longs
+	representing the type of ContextEvent.
+	(type): Change type from Type to long.
+	(ContextEvent): Take a long argument, instead of a Type.
+	(getType): Return a long, not a Type.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	(status): Change from int to long.
+	(native_set_sink_volume): Remove. It was unimplemented in the JNI side.
+	(getStatus): Return long instead of int.
+	(update): Replace int argument with long argument. Remove the switch
+	statement.
+	(setVolume): Remove. Unused.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java
+	(State): Remove and replace with...
+	(Running, Done, Cancelled): Static longs, enumerating the possible
+	operation states.
+	(init_constants): New native method to initialize the above variables.
+	(checkNativeOperationState): Make sure that the input is one of the longs
+	representing the operation state.
+	(native_get_state): Change return type from int to long.
+	(getState): Change return type to long; remove switch.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	Remove the names of enums from the names of constants since most of them
+	were changed to static longs.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	Same changes as in PulseAudioDataLine.java.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(State): Remove and replace with...
+	(UNCONNECTED, CREATING, READY, FAILED, TERMINATED): New static long variables
+	replacing enum Type.
+	(init_constants): New native method to initialize the above variables.
+	(checkNativeStreamState): Make sure that the input is one of the longs
+	representing the kind of StreamState.
+	(native_pa_stream_get_state): Change the return from int to long.
+	(getState): Remove the switch.
+	* pulseaudio/src/native/jni-common.h
+	(SET_JAVA_STATIC_LONG_FIELD_TO_PA_ENUM): Macro that sets one of the java
+	 static longs to the corresponding pa_constant.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_ContextEvent.c
+	New file.
+	(SET_CONTEXT_ENUM): Macro that sets the ContextEvent types.
+	(Java_org_classpath_icedtea_pulseaudio_ContextEvent_init_1constants):
+	Implementation of ContextEvent.init_constants.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(context_change_callback): Change the fourth argument of GetMethodID
+	to "(J)V" to reflect the change in the signature of EventLoop.update.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Operation.c
+	(SET_OP_ENUM): Macro that sets the operation types.
+	(Java_org_classpath_icedtea_pulseaudio_Operation_init_1constants):
+	Implementation of Operation.init_constants.
+	(Java_org_classpath_icedtea_pulseaudio_Operation_native_1get_1state):
+	Change return type to jlong.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(SET_STREAM_ENUM): Macro that sets the stream states.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_init_1constants):
+	Implementation of Stream.init_constants.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1get_1state):
+	Change return type to jlong.
+
+2011-06-15  Denis Lila  <dlila@redhat.com>
+
+	* Makefile.am: Add back the -classpath option to javah in
+	building the pulse audio header files. The bootstrap javah
+	doesn't recognize -J-Xbootclasspath/p: so it couldn't find
+	the classfiles.
+
+2011-06-10  Denis Lila  <dlila@redhat.com>
+
+	* pulseaudio/*: Fix whitespace.
+
+2011-06-10  Denis Lila  <dlila@redhat.com>
+
+	* Makefile.am
+	(stamps/pulse-java-headers.stamp): Prepend the java build directory
+	to the boot class path to avoid generating headers for the system
+	pulse-java classes.
+
+2010-07-12 Jon VanAlten <jon.vanalten@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java:
+	Eliminate spurious exception throwing from open, close, read, write,
+	drain, and flush calls on closed lines.
+	Use isOpen() API call instead of instance variable where appropriate.
+
+2010-07-16  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(clean-pulse-java): Always check for existence before
+	using rmdir.
+
+2010-07-06  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(PULSE_JAVA_BUILDDIR): Use a different name from
+	the source directory to avoid confusion.
+
+2010-06-04 Jon VanAlten  <jon.vanalten@redhat.com>
+
+	PR icedtea/438
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java:
+	(isControlSupported): Correctly determine if control-type is
+	supported.
+	* Makefile.am
+	(stamps/icedtea.stamp): Add PulseAudio sources to src.zip
+
+2010-03-08  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(IT_CFLAGS): General CFLAGS for all IcedTea
+	C builds, which includes ARCHFLAG.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/%.o): Use IT_CFLAGS.
+
+2010-02-24 Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	Add missing pulse-java alias and reorganise
+	existing aliases alphabetically.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/%.o): Add include
+	directive for build directory to pick up generated
+	headers.
+
+2010-02-24 Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(install-exec-local): Prefix libpulse-java.so with
+	build directory path.
+	(clean-pulse-java): No need to delete libpulse-java.so
+	as no longer at top-level.
+
+2010-02-24 Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioStreamVolumeControl.c:
+	Removed, never built and no corresponding
+	Java source file.
+	* Makefile.am:
+	(PULSE_JAVA_NATIVE_SRCS): List of PulseAudio source
+	files.
+	(PULSE_JAVA_NATIVE_OBJECTS): List of PulseAudio object
+	files.
+	(pulse-java.stamp): Depend on compiled library rather than
+	headers target.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/%.o): New target to compile
+	object files from source files using make substitution.
+	($(PULSE_JAVA_NATIVE_BUILDDIR)/libpulse-java.so): New target
+	to build the shared library.
+	(pulse-java-native-code.stamp): Removed.
+
+2009-11-17  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(clean-pulse-java): Remove the empty pulseaudio
+	directory if building out-of-tree.
+
+2009-11-02  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	(stamps/pulse-java.stamp): Move native code generation to its
+	own target, making this a top-level dependency target.
+	(stamps/pulse-java-native-code.stamp): New target for native
+	code generation for PulseAudio plugin.
+	(clean-pulse-java): Always remove stamps.
+
+2009-09-23  Jon VanAlten  <jon.vanalten@redhat.com>
+
+	* Makefile.am:
+	Build PulseAudio class files into distinct subdirectory.
+
+2009-08-27  Matthias Klose  <doko@ubuntu.com>
+
+	* acinclude.m4, configure.ac (FIND_PULSEAUDIO): Remove.
+	* INSTALL: Don't require the pulseaudio binary.
+
+2009-02-11  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Throw IllegalArgumentException instead of
+	ArrayIndexOutOfBoundsException for length.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(read): Fixed bounds checking.
+
+2009-02-11  Marc Schoenefeld <mschoene@redhat.com>
+            Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Fix bounds checking.
+
+2009-01-30  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	Rename PULSEAUDIO_SOURCES
+	to avoid conflict with autoconf names.
+
+2009-01-22  Omair Majid  <omajid@redhat.com>
+	    Ioana Ivan <iivan@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(start): Return silently if already started.
+	(stop): Return silently if already stopped.
+
+2009-01-21  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java:
+	Remove unused variables volume and muted.
+	(PulseAudioClip): Remove variable volume.
+	(open): Remove muteControl, volume and muted.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(setVolume): Rename to setCachedVolume.
+	(getVolume): Rename to getCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java:
+	Remove file. Mute relied on chaning the volume only through the api. That
+	assumption is invalid as the user can change volume through pulseaudio's
+	controls.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPlaybackLine.java
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(getVolume): Rename to getCachedVolume.
+	(setVolume): Rename to setCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java:
+	Remove muted and muteControl. Rename volume to cachedVolume. 
+	(PulseAudioPort): Remove muteControl.
+	(isMuted): Remove function.
+	(setMuted): Remove.
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	(setVolume): Rename to setCachedVolume.
+	(getVolume): Rename to getCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	Remove muteControl, muted and volume.
+	(open): Remove muteControl.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(isMuted): Remove.
+	(setMuted): Remove.
+	(getVolume): Rename to getCachedVolume.
+	(setVolume): Rename to setCachedVolume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(native_setVolume): Rename to native_set_volume.
+	(native_updateVolumeInfo): Rename to native_update_volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java
+	(setValue): Dont check for mute.
+	(getValue): Query pulseaudio for any change in volume.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java:
+	New variable cachedVolume.
+	(native_setVolume): Rename to native_set_volume.
+	(native_update_volume): New function.
+	(getCachedVolume): New function.
+	(setCachedVolume): New function.
+	(update_channels_and_volume): New function.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(sink_input_volume_change_complete): Remove.
+	(sink_input_change_volume): Remove.
+	(Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1set_1sink_1volume):
+	Remove.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioSourcePort.c
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1updateVolumeInfo):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1update_1volume.
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1setVolume):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioSourcePort_native_1set_1volume.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_PulseAudioTargetPort.c
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1updateVolumeInfo):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1update_1volume.
+	(Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1setVolume):
+	Rename to
+	Java_org_classpath_icedtea_pulseaudio_PulseAudioTargetPort_native_1set_1volume.
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1setVolume): Rename
+	to Java_org_classpath_icedtea_pulseaudio_Stream_native_1set_1volume.
+	(get_sink_input_volume_callback): New function.
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1update_1volume): New
+	function.
+
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testSupportedControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineRawTest.java
+	(testVolumeAndMute): Rename to testVolume. Remove test for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java
+	(testVolumeAndMute): Likewise.
+	(testSupportedControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java:
+	(testControls): Update to not check for MuteControl.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java
+	(testControls): Likewise.
+
+2008-12-02  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextEvent.java:
+	Change scope of class and functions from public to package-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/ContextListener.java:
+	Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java:
+	Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java:
+	Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java:
+	Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java:
+	Change class to be final. Change clip name to 'Audio Clip' and add some
+	documentation and annotations.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java:
+	Change class scope to package-private. Add annoatations to functions.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioLine.java:
+	Add override annotations to functions.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java:
+	Change class to final.
+	(getLine): Check for audio permissions before returning Ports.
+	(openRemote): Check for permissions to connect before connecting to a
+	remote PulseAudio server.
+	(openImpl): New function. Connect to the PulseAudio server.
+	(debug): Removed.
+	(main): Removed
+	(ThreadWriter): Removed.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerInfo.java:
+	Change class to final. Bump version.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java:
+	(PulseAudioMixerProvider): Removed.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMuteControl.java:
+	Change class to final. Formatting fixes.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java:
+	Change class scope to package private. Make constructor package-private. 
+	Add override annotations.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	Change class to final. Make constructor package-private. Add override
+	annotations.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java:
+	Make class final. Make constructor package-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java:
+	Make class final. Add override annotations
+	(PulseAudioTargetDataLine): Make constructor package-private.
+	(fragmentBuffer): Make variable private.
+	(drained): Likewise.
+	(flushed): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java:
+	Make class final. Constructor now pacakge-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioVolumeControl.java:
+	Make class final.
+	(MIN_VOLUME),
+	(MAX_VOLUME): Make variables pacakge-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java:
+	Make class final.
+	(loadNativeLibrary): Make package-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java:
+	Make class final. Change scope of as many functions from public to
+	package-private as possible.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamBufferAttributes.java:
+	Make class and all functions package-private.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/StreamSampleSpecification.java:
+	Make class package-private.
+
+2008-12-02  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Add missing include
+	directives.
+
+2008-11-18  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am: Fix issues with
+	distcheck so pulse-audio
+	files are correctly removed.
+
+2008-11-14  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	Removed useless SuppressWarnings.
+	(static): Delegate the loading of native libraries to SecurityWrapper.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Operation.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java 
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(static): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/SecurityWrapper.java
+	New class.
+	(loadNativeLibrary): Loads libpulse-java.so in a privileged operation to
+	work when a security manager is installed.
+
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/Debug.java
+	New class containing debugging functions.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	(run): Print some debugging info.
+	(update): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(ClipThread.writeFrames): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(PulseAudioMixer): Likewise.
+	(getLine): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixerProvider.java
+	(PulseAudioMixerProvider): Initialize Debug class.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(open): Print some debug info.
+	(close): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(open): Likewise.
+	(close): Likewise.
+
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(close): Dont check for permission to play audio. Always granted.
+	Infact, checking it causes an AccessControlException for untrusted
+	applets. The ALSA based backend doesnt check this permission at all.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): Likewise.
+	(getSourceLines): Likewise.
+	(close): Likewise.
+	(open): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(open): Likewise.
+	(close): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(open): Likewise.
+	(close): Likewise.
+
+2008-11-10  Omair Majid  <omajid@redhat.com>
+
+	* pulseaudio/src/native/org_classpath_icedtea_pulseaudio_EventLoop.c
+	(Java_org_classpath_icedtea_pulseaudio_EventLoop_native_1set_1sink_1volume):
+	Deallocate unused memory.
+
+2008-11-04  Omair Majid  <omajid@redhat.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Link in libpulse.so after all
+	the object files that use it.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLineTest.java
+	(testWriteIntegralNumberFrames): New function. Tests that a SourceDataLine
+	will only write an integral number of frames.
+	(testWriteNegativeLength): New function. Tests that a
+	SourceDataLine.write() wont accept a negative length.
+	(testWriteNegativeOffset): New function. Tests that a
+	SourceDataLine.write() will not accept a negative offset.
+	(testWriteMoreThanArrayLength): New function. Tests that
+	SourceDataLine.write() wont write more than the length of the array.
+	(testWriteMoreThanArrayLength2): Likewise.
+	(testWriteWithoutStart): Added a check to avoid throwing an
+	IllegalStateException.
+
+2008-10-25  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (clean-pulse-java): Remove object files.
+
+2008-10-24  Omair Majid <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(write): Check for offset being negative.
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioClipTest.java
+	(testMixerKnowsAboutOpenClips): Removed the assumption that mixer had no
+	other lines open.
+
+2008-10-24  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (clean-pulseaudio): Don't remove source files. Might
+	not be correct, but doesn't do harm in any build environment.
+
+2008-10-20  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am: Compile PulseAudio Java
+	files with debugging information.
+
+2008-10-20  Andrew John Hughes  <gnu.andrew@redhat.com>
+
+	* Makefile.am:
+	Fix PulseAudio paths to work
+	when srcdir != builddir.
+
+2008-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Fix location of PulseAudio build output.
+
+2008-10-19  Andrew John Hughes  <gnu_andrew@member.fsf.org>
+
+	* Makefile.am:
+	Make PULSE_JAVA_DIR use srcdir
+
+2008-10-14 Ioana Ivan <iivand@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(open): startedListener only sends a START event when playback first
+	starts and after an underflow
+	(start): sends a START event if there's data on the line
+
+2008-10-14 Ioana Ivan <iivan@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(connectLine): changed bufferAttributes to fix crackling in the clip tests
+
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpat/icedtea/pulseaudio/PulseAudioDataLine.java
+	(connect): Removed debug output.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(read): Commented out debug output.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* Makefile.am (clean-pulse-java): Dont attempt to remove jni-common.o from
+	current directory.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* .hgignore: Added pulse-java.jar to ignore list.
+	* Makefile.am: Move jni-common.o out of the way when done.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Added
+	-I$(ICEDTEA_BOOT_DIR)/include/linux.
+
+2008-10-14 Omair Majid <omajid@redhat.com>
+
+	* .hgignore: Added generated files to ignore list.
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/EventLoop.java
+	(EventLoop): Initialize eventLoop object on construction.
+
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	(PulseAudioClip): Removed the parameter eventLoop.
+	(getMicrosecondLength): Return time in microseconds.
+	(getMicrosecondPosition): Likewise.
+	(open): Dont throw an exception if Mixer is not open. Let super handle it.
+	(setFramePosition): Check frame position for being positive.
+	(setLoopPoints): Check that the starting frame is valid.
+	(setMicrosecondPosition): Deal with negative value and values over the 
+	maximum.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(open): Open the mixer if it isnt open.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): Dont pass eventLoop as a paramter.
+	(close): Close all open lines on exit.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java
+	(PulseAudioPort): Modified to not take an EventLoop paramter.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(PulseAudioSourceDataLine): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java
+	(PulseAudioSourcePort): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(PulseAudioTargetDataLine): Likewise.
+	* pulseaudio/src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java
+	(PulseAudioTargetPort): Likewise.
+
+	* pulseaudio/unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLineTest.java
+	(testMixerKnowsAboutOpenLines): Work even if mixer has some lines
+	initially open.
+
+2008-10-12  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (stamps/pulse-java.stamp): Add -I$(ICEDTEA_BOOT_DIR)/include
+	to build the source files.
+
+2008-10-11  Matthias Klose  <doko@ubuntu.com>
+
+	* Makefile.am (clean-pulse-java): Don't rm -rf / if configuring
+	without pulseaudio, remove jni-common.o.
+
+	* Makefile.am (stamps/pulse-java.stamp): Remove -fpic flag, add
+	-fPIC to build jni-common.c. (gcjwebplugin.so): Use -fPIC.
+
+2008-10-10 Ioana Ivan <iivan@redhat.com>
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java
+	(getLine): LineUnavailablException is no longer thrown if the mixer is 
+	not open
+	(getTargetLines) : returns a Line[] array instead of a
+	TargetDataLine[] array
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine
+	(open(AudioFormat format, int bufferSize)): throws
+	LineUnavailableException if the mixer is not open
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip
+	(open()): throws LineUnavailableException if the mixer is not open
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort
+	(PulseAudioPort): calls open()
+
+2008-10-10 Ioana Ivan <iivan@redhat.com>
+	    Omair Majid <omajid@redhat.com>
+
+	* INSTALL: Updated to reflect requirements for pulse-java.
+	* Makefile.am:
+	(distclean-local): Clean up pulse-java. 
+	(EXTRA_DIST): Add pulseaudio folder.
+	(stamps/icedtea.stamp): Added dependency on stamps/pulse-java.stamp. Also
+	copy generated .jar and .so files to the jre images.
+	(stamps/icedtea-debug.stamp): Likewise.
+	(stamps/pulse-java.stamp): New target.
+	(stamps/pulse-java-jar.stamp): Likewise.
+	(stamps/pulse-java-class.stamp): Likewise.
+	(stamps/pulse-java-headers.stamp): Likewise.
+	(clean-pulse-java): Likewise.
+	* README: Added note for PulseAudio based mixer.
+	* acinclude.m4:
+	(FIND_PULSEAUDIO): Find the pulseaudio binary.
+	* configure.ac: Check for pulseaudio server and header files being
+	installed.
+	* patches/icedtea-pulse-soundproperties.patch: Dont use pulse-java as the
+	default Mixer.
+	* pulseaudio/: Copied over sources from pulseaudio repository.
+
+2008-10-10 Ioana Ivan <iivan@redhat.com>
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(getLineInfo): removed method, moved to each subclass
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	(getLineInfo): new method
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java
+	(getLineInfo): new method
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java
+	getLineInfo): new method
+
+
+2008-10-08 Ioana Ivan <iivan@redhat.com>
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java
+	(addStreamListener): startedListener always fires a START event
+			     strtedListener notifies drain that there is data
+			     on the line
+	(stop): sets writeInterrupted to true
+	(start): doesn't send any events
+	(getBytesInBuffer): new function, returns the number of bytes
+	currently present in a stream's buffer
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	(write): -checks writeInterrupted instead of drain and flush
+	         -if stop() was called before write() it writes data to the
+		 buffer until the buffer fills, then blocks
+		 -moved some code from the synchronized(this) block, since it
+		 was causing one test to hang
+	(close): sets writeInterrupted to true
+	(drain): sets writeInterrupted to true
+		 if the line is stopped and there is no data on the line,
+		 returns immediately, if there is data, blocks until the line
+		 is started
+	* src/java/org/classpath/icedtea/pulseaudio/Stream.java
+	(native_pa_stream_updateTimingInfo): new function
+	( bytesInBuffer): new function
+
+	* src/native/org_classpath_icedtea_pulseaudio_Stream.c
+	(JNICALL Java_org_classpath_icedtea_pulseaudio_Stream_bytesInBuffer):
+	new function
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1updateTimingInfo):
+	new function
+	(update_timing_info_callback): new function
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1writable_1size):
+	return 0 if the stream has been closed
+
+2008-09-25 Ioana Ivan <iivan@redhat.com>
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java:
+	removed all references to the boolean variable corked since it was
+	redundant.
+	(start) : only send a START event if there's been a call to stop between
+	the last call to start and this one.
+	(stop): only send a STOP event if there's been a call to start between
+	the last call the stop and this one.
+	(startedListener.update): send a START event the first time data is
+	being written to the line and after an underflow. 
+
+2008-09-25 Ioana Ivan <iivan@redhat.com>
+
+	* src/native/org_classpath_icedtea_Stream.c
+	(Java_org_classpath_icedtea_pulseaudio_Stream_native_1pa_1stream_1connect_1playback):
+	pass 0 as a flag to pa_stream_connect_playback
+
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	formating changes
+
+2008-09-23 Ioana Ivan <iivan@redhat.com>
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java:
+		-split open() into createStream(), addStreamListeners() and
+		connect(), which can be reused when reconnecting the line for
+		synchronization
+		-added recconectForSynchronization()
+		-made some changes to stop()/start() in order to send
+		START/STOP events both when corking and in case of underflow
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java:
+		-changes to synchronize()
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	         -changed connectLine to take the masterStream as a
+		 parameter in case we want to synchronize the Line
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioClip.java:
+		 -changed connectLine to take the masterStream as a
+		 parameter in case we want to synchronize the Line
+
+2008-08-13 Ioana Ivan  <iivan@redhat.com>
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioPort.java:
+		superclass for TargetPort and SourcePort
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourcePort.java:
+		implements the abstract methods required in PulseAudioPort
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java:
+		implements the abstract methods required in PulseAudioPort
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioSourcePortTest.java
+	* unittests/org/classpath/icedtea/pulseaudio/PulseAudioTargetPortTest.java:
+		new tests
+
+
+2008-08-13 Ioana Ivan  <iivan@redhat.com>
+
+        * src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetPort.java:
+	new class representing a targetport
+	* some refactoring in the control classes (controls for the target
+	port are now supported)
+
+2008-08-13 Ioana Ivan  <iivan@redhat.com>
+
+        * src/java/org/classpath/icedtea/pulseaudio/PulseAudioDataLine.java:
+	        superclass for TargetDataLine and SourceDataLine; moved open
+		and close here
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java:
+		chnaged the methods written so far to use Stream.java
+
+
+2008-08-13 Ioana Ivan  <iivan@redhat.com>
+
+        * src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java:
+	modified getLine() to allow us to obtain a TargetDataLine
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioTargetDataLine.java: 
+	added open(), read() and close()
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java
+	marged the streamListeners into a single listener
+
+
+
+2008-08-13 Ioana Ivan  <iivan@redhat.com>
+
+        * src/java/org/classpath/icedtea/pulseaudio/PulseAudioMixer.java: the
+	list of formats recognized by PulseAudio is being set here, so it can
+	be used by all DataLines. Also made some changes to get*LineInfo() and
+	isLineSupported()
+	* src/java/org/classpath/icedtea/pulseaudio/PulseAudioSourceDataLine.java:
+	changed the constructor 
+
+
+2008-08-11  Joshua Sumali  <jsumali@redhat.com>
+
+	* configure.ac: Add check for libpulse.
+	* src/native/Makefile.am: Use flags from PKG_CHECK_MODULES.
+
+2008-08-11  Joshua Sumali  <jsumali@redhat.com>
+
+	* src/native/Makefile.am: Add flags to link against pulseaudio.
+
+2008-08-11  Joshua Sumali  <jsumali@redhat.com>
+
+	* .hgignore: Updated.
+	* Makefile.am: Add libpulse-java.so to clean-local.
+	* src/native/Makefile.am: Copy libpulse-java.so to the top dir after
+	building.
+
+2008-08-11  Joshua Sumali  <jsumali@redhat.com>
+
+	* .hgignore: Updated.
+
+2008-08-11  Joshua Sumali  <jsumali@redhat.com>
+
+	* ChangeLog: New file.
+	* INSTALL: Likewise.
+	* NEWS: Likewise.
+	* Makefile.am: Likewise.
+	* build.xml: Likewise.
+	* config.guess: Likewise.
+	* config.sub: Likewise.
+	* configure.ac: Likewise.
+	* depcomp: Likewise.
+	* install-sh: Likewise.
+	* libtool: Likewise.
+	* ltmain.sh: Likewise.
+	* missing: Likewise.
+	* src/org/*: Moved to src/java.
+	* src/META-INF: Moved to src/java.
+	* src/native/Makefile.am: New file.
+	* makefile: Removed.
+	* src/*.c: Moved to src/native.
+	* src/*.h: Likewise.
+
+# ChangeLog -- List of changes
+# Copyright (C) 2014 Red Hat, Inc.
+#
+# This file is part of IcedTea-Sound.
+#
+# IcedTea-Sound is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2.
+#
+# IcedTea-Sound is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with IcedTea-Sound; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301 USA.

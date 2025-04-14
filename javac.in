@@ -1,0 +1,104 @@
+#!/usr/bin/perl -w
+
+# javac.in -- Template wrapper script for running javac
+# Copyright (C) 2014 Red Hat, Inc.
+#
+# This file is part of IcedTea-Sound.
+#
+# IcedTea-Sound is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2.
+# 
+# IcedTea-Sound is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with IcedTea-Sound; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301 USA.
+
+use strict;
+use constant NO_DUP_ARGS => qw(-source -target -d -encoding);
+use constant STRIP_ARGS_1 => qw(-Werror -implicit:none);
+use constant STRIP_ARGS_2 => qw(-Xmaxwarns);
+
+my ($ECJ_WARNINGS, $JAVAC_WARNINGS);
+
+if ("@ENABLE_WARNINGS@" eq "yes")
+{
+    $ECJ_WARNINGS="-warn:-unused,warningToken";
+    $JAVAC_WARNINGS="-Xlint";
+}
+else
+{
+    $ECJ_WARNINGS="-nowarn";
+    $JAVAC_WARNINGS="-nowarn";
+}
+
+my @bcoption;
+my @bcoptions = grep {$_ =~ '^-Xbootclasspath/p:' } @ARGV;
+my $bc = $bcoptions[0];
+my $systembc = glob '@abs_top_builddir@/bootstrap/jdk1.6.0/jre/lib/rt.jar';
+if ($bc)
+{
+    $bc =~ s/^[^:]*://;
+    $systembc = join ":", $bc, $systembc;
+}
+push @bcoption, '-bootclasspath', $systembc
+    unless grep {$_ eq '-bootclasspath'} @ARGV;
+my @ecj_parms = ($ECJ_WARNINGS, @bcoption);
+my @javac_parms = ($JAVAC_WARNINGS, '-Xprefer:source',
+		   '-XDignore.symbol.file=true', '-J-Xmx1024m');
+
+# Work around ecj's inability to handle duplicate command-line
+# options and unknown javac options.
+sub gen_ecj_opts
+{
+    my @new_args = @{$_[0]};
+
+    for my $opt (NO_DUP_ARGS) 
+    {
+	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+	if (@indices > 1) {
+	    shift @indices;    # keep last instance only
+	    splice @new_args, $_, 2 for @indices;
+	}
+    }
+
+    for my $opt (STRIP_ARGS_1) 
+    {
+	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+	splice @new_args, $_, 1 for @indices;
+    }
+
+    for my $opt (STRIP_ARGS_2) 
+    {
+	my @indices = reverse grep {$new_args[$_] eq $opt} 0..$#new_args;
+	splice @new_args, $_, 2 for @indices;
+    }
+
+    return @new_args;
+}
+
+if ( -e "@JAVAC@" )
+{
+    if ("@USING_ECJ@" eq "yes")
+    {
+	my @ecj_args = gen_ecj_opts( \@ARGV );
+	exec '@JAVAC@', @ecj_parms, @ecj_args ;
+    }
+    else
+    {
+	exec '@JAVAC@', @javac_parms, @ARGV ;
+    }
+}
+else
+{
+    my @ecj_args = gen_ecj_opts( \@ARGV );
+    my @CLASSPATH = ('@ECJ_JAR@');
+    push @CLASSPATH, split /:/, $ENV{"CLASSPATH"} if exists $ENV{"CLASSPATH"};
+    $ENV{"CLASSPATH"} = join ':', @CLASSPATH;
+    exec '@JAVA@', 'org.eclipse.jdt.internal.compiler.batch.Main', @ecj_parms, @ecj_args;
+}

@@ -1,0 +1,32 @@
+# AUTHORS -- List of authors
+# Copyright (C) 2014 Red Hat, Inc.
+#
+# This file is part of IcedTea-Sound.
+#
+# IcedTea-Sound is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2.
+# 
+# IcedTea-Sound is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with IcedTea-Sound; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301 USA.
+
+The following people have made contibutions to this project.
+project. If your name does not appear, but should, let
+us know. Please keep this list in alphabetic order.
+
+Andrew John Hughes <gnu_andrew@member.fsf.org, gnu.andrew@redhat.com>
+Ioana Ivan <iivan@redhat.com>
+Matthias Klose <doko@ubuntu.com>
+Denis Lila <dlila@redhat.com>
+Omair Majid <omajid@redhat.com>
+Xerxes Rånby <xerxes@zafena.se>
+Marc Schoenefeld <mschoene@redhat.com>
+Joshua Sumali <jsumali@redhat.com>
+Jon VanAlten <jon.vanalten@redhat.com>

@@ -1,0 +1,43 @@
+# NEWS -- Release notes
+# Copyright (C) 2014 Red Hat, Inc.
+#
+# This file is part of IcedTea-Sound.
+#
+# IcedTea-Sound is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, version 2.
+# 
+# IcedTea-Sound is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with IcedTea-Sound; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301 USA.
+
+Key:
+
+SX  - http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=X
+PRX - http://icedtea.classpath.org/bugzilla/show_bug.cgi?id=X
+RHX - https://bugzilla.redhat.com/show_bug.cgi?id=X
+DX  - http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=X
+GX  - http://bugs.gentoo.org/show_bug.cgi?id=X
+CAX - http://server.complang.tuwien.ac.at/cgi-bin/bugzilla/show_bug.cgi?id=X
+LPX - https://bugs.launchpad.net/bugs/X
+JSRX - http://jcp.org/en/jsr/detail?id=X
+JEPX - http://openjdk.java.net/jeps/X
+
+CVE-XXXX-YYYY: http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=XXXX-YYYY
+
+New in release 1.0.1 (2014-07-18):
+
+* PR1877: Code not updated in accordance with name changes in PR1840
+
+New in release 1.0.0 (2014-07-18):
+
+* PR1741: Break PulseAudio provider out into IcedTea-Sound
+* PR1840: Replace Makefile.am references to PULSE_JAVA with ICEDTEA_SOUND
+* PR1842: Linker does not check that symbols can be resolved for libpulse-java.so
+* PR1876: The following shared libraries lack a SONAME: /usr/lib64/libicedtea-sound.so
