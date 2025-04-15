@@ -1,0 +1,81 @@
+[![Release](https://jitpack.io/v/umjammer/icedtea-sound.svg)](https://jitpack.io/#umjammer/icedtea-sound)
+[![Java CI](https://github.com/umjammer/icedtea-sound/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/icedtea-sound/actions/workflows/maven.yml)
+[![CodeQL](https://github.com/umjammer/icedtea-sound/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/icedtea-sound/actions/workflows/codeql.yml)
+![Java](https://img.shields.io/badge/Java-17-b07219)
+
+# icedtea-sound
+
+♬ Java Sound SPI for PulseAudio
+
+## Install
+
+* [maven](https://jitpack.io/#umjammer/icedtea-sound)
+
+## Usage
+
+## References
+
+* https://icedtea.classpath.org/download/source/
+
+## TODO
+
+----
+
+# Original
+
+IcedTea-Sound README
+Last updated: 11th of June, 2014
+Copyright (C) 2014 Red Hat, Inc.
+
+This file is part of IcedTea-Sound.
+
+IcedTea-Sound is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 2.
+
+IcedTea-Sound is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+ 
+You should have received a copy of the GNU General Public License
+along with IcedTea-Sound; see the file COPYING.  If not, write to
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+02110-1301 USA.
+
+What Is This?
+=============
+
+A collection of audio SPI implementations for Java, including:
+
+ * the use of PulseAudio as a mixer 
+   org.classpath.icedtea.pulseaudio.PulseAudioMixerProvider
+   (so as a bonus you get all of the ear candy that PulseAudio provides)
+
+How to Build?
+=============
+
+$ ./autogen.sh && ./configure && make
+
+Note: Building requires PulseAudio 0.9.11 and a JDK.
+ 
+How to Run the Tests?
+=====================
+
+After building, do:
+  
+$ make check
+
+(a few tests might fail; they test the networking capabilities of PulseAudio 
+
+Where Does It Come From?
+========================
+All of the code was written by the authors
+
+The sound files new.wav and logout.wav were taken from 
+http://websvn.kde.org/branches/KDE/4.0/kdeartwork/sounds/ (and renamed). 
+They are licensed by the copyright holders as GPLv2.
+
+The sound file error.wav is part of gnome-audio
+http://ftp.gnome.org/pub/gnome/sources/gnome-audio/2.22/gnome-audio-2.22.2.tar.bz2
+It is licensed under the LGPL by the copyright holders.
