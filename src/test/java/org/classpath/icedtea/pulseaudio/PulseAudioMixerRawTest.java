@@ -39,12 +39,17 @@ package org.classpath.icedtea.pulseaudio;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import javax.sound.sampled.LineUnavailableException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.EnabledIf;
 
 import static java.lang.System.getLogger;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -55,6 +60,25 @@ public class PulseAudioMixerRawTest {
     private static final Logger logger = getLogger(PulseAudioMixerRawTest.class.getName());
 
     PulseAudioMixer mixer = null;
+
+    static boolean townExists() {
+        try {
+            InetAddress.getByName("town");
+            return true;
+        } catch (UnknownHostException e) {
+            return false;
+        }
+    }
+
+    /** pulseaudio's module-native-protocol-tcp listens on 4713 */
+    static boolean localTcpServerExists() {
+        try (Socket socket = new Socket()) {
+            socket.connect(new InetSocketAddress("127.0.0.1", 4713), 1000);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @BeforeEach
     public void setUp() {
@@ -89,6 +113,7 @@ public class PulseAudioMixerRawTest {
      * pulseaudio listening on port 4173
      */
     @Test
+    @EnabledIf("townExists")
     public void testRemoteOpenWithValidPort() throws UnknownHostException, LineUnavailableException {
         logger.log(Level.TRACE, "This test tries to connect a valid remote system");
         mixer.openRemote("JUnitTest", "town", 4713);
@@ -100,12 +125,14 @@ public class PulseAudioMixerRawTest {
      * pulseaudio listening
      */
     @Test
+    @EnabledIf("townExists")
     public void testRemoteOpen() throws UnknownHostException, LineUnavailableException {
         mixer.openRemote("JUnitTest", "town");
         mixer.close();
     }
 
     @Test
+    @DisabledIf("localTcpServerExists")
     public void testInvalidRemoteOpen() throws UnknownHostException, LineUnavailableException {
         assertThrows(LineUnavailableException.class, () -> {
             mixer.openRemote("JUnitTest", "127.0.0.1");

@@ -69,8 +69,8 @@ public class PulseAudioSourceDataLineRawTest {
 
     PulseAudioMixer mixer = null;
 
-    int started = 0;
-    int stopped = 0;
+    volatile int started = 0;
+    volatile int stopped = 0;
 
     final AudioFormat aSupportedFormat = new AudioFormat(
             AudioFormat.Encoding.PCM_UNSIGNED, 44100f, 8, 1, 1, 44100f, true);
@@ -141,7 +141,7 @@ public class PulseAudioSourceDataLineRawTest {
 
         System.out.println("This test checks if START and STOP notifications appear on corking");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -167,6 +167,10 @@ public class PulseAudioSourceDataLineRawTest {
         writer.start();
         //logger.log(Level.TRACE, "started");
 
+        // playback may start late (e.g. while a suspended sink resumes)
+        for (int i = 0; i < 50 && started == 0; i++) {
+            Thread.sleep(100);
+        }
         Thread.sleep(1000);
 
         // CORK
@@ -193,7 +197,7 @@ public class PulseAudioSourceDataLineRawTest {
         SourceDataLine line = (SourceDataLine) selectedMixer.getLine(new Line.Info(SourceDataLine.class));
 
         File soundFile = new File(new java.io.File(".").getCanonicalPath()
-                + "/testsounds/logout.wav");
+                + "/src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -222,7 +226,7 @@ public class PulseAudioSourceDataLineRawTest {
     @Test
     public void testSettingStreamName() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException {
-        File soundFile = new File("testsounds/logout.wav");
+        File soundFile = new File("src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 

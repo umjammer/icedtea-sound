@@ -94,7 +94,7 @@ public class pa_source_info extends Structure {
 	 * < Array of available ports, or NULL. Array is terminated by an entry set to NULL. The number of entries is stored in n_ports. \since 0.9.16<br>
 	 * C type : pa_source_port_info**
 	 */
-	public vavi.sound.pulseaudio.jna.pulseaudio.pa_source_port_info.ByReference[] ports;
+	public Pointer ports;
 	/**
 	 * < Pointer to active port in the array, or NULL. \since 0.9.16<br>
 	 * C type : pa_source_port_info*
@@ -106,7 +106,7 @@ public class pa_source_info extends Structure {
 	 * < Array of formats supported by the source. \since 1.0<br>
 	 * C type : pa_format_info**
 	 */
-	public vavi.sound.pulseaudio.jna.pulseaudio.pa_format_info.ByReference[] formats;
+	public Pointer formats;
 	public pa_source_info() {
 		super();
 	}

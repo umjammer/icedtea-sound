@@ -40,7 +40,6 @@ package org.classpath.icedtea.pulseaudio;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineEvent;
@@ -87,10 +86,6 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
             return;
         }
 
-        /* check for permission to record audio */
-        AudioPermission perm = new AudioPermission("record", null);
-        perm.checkGuard(null);
-
         PulseAudioMixer parentMixer = PulseAudioMixer.getInstance();
         parentMixer.removeTargetLine(this);
 
@@ -102,10 +97,6 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
     @Override
     synchronized public void open(AudioFormat format, int bufferSize)
             throws LineUnavailableException {
-        // check for permission to record audio
-        AudioPermission perm = new AudioPermission("record", null);
-        perm.checkGuard(null);
-
         if (isOpen()) {
             throw new IllegalStateException("already open");
         }
@@ -251,7 +242,21 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
         //
         // if we need to read more data, then we read from PulseAudio's buffer
         //
+        boolean noData = false;
         while (remainingLength != 0) {
+            if (noData) {
+                // wait for data without holding any lock, otherwise this loop
+                // starves drain(), flush() and the event loop
+                synchronized (eventLoop.threadLock) {
+                    try {
+                        eventLoop.threadLock.wait(10);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return sizeRead;
+                    }
+                }
+            }
+
             synchronized (this) {
 
                 if (!isOpen() || !isStarted) {
@@ -275,6 +280,7 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
                     currentFragment = stream.peek();
 
                     stream.drop();
+                    noData = currentFragment == null;
                     if (currentFragment == null) {
                         logger.log(Level.TRACE,
                                 "PulseAudioTargetDataLine.read(): " + " error in stream.peek()");
@@ -312,6 +318,14 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
 
     @Override
     public void drain() {
+        if (!isOpen()) {
+            throw new IllegalStateException("line not open");
+        }
+
+        // make a blocking read() return
+        synchronized (this) {
+            drained = true;
+        }
 
         // blocks when there is data on the line
         // http://www.jsresources.org/faq_audio.html#stop_drain_tdl
@@ -332,24 +346,21 @@ public final class PulseAudioTargetDataLine extends PulseAudioDataLine
                 // do nothing
             }
         }
-
-        synchronized (this) {
-            drained = true;
-        }
     }
 
     @Override
     public synchronized void flush() {
-        if (isOpen()) {
-
-            // flush the buffer on pulseaudio's side
-            Operation operation;
-            synchronized (eventLoop.threadLock) {
-                operation = stream.flush();
-            }
-            operation.waitForCompletion();
-            operation.releaseReference();
+        if (!isOpen()) {
+            throw new IllegalStateException("line not open");
         }
+
+        // flush the buffer on pulseaudio's side
+        Operation operation;
+        synchronized (eventLoop.threadLock) {
+            operation = stream.flush();
+        }
+        operation.waitForCompletion();
+        operation.releaseReference();
 
         flushed = true;
         // flush the partial fragment we stored

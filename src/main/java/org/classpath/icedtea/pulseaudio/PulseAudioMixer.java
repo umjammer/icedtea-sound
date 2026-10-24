@@ -49,7 +49,6 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioFormat.Encoding;
-import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.Control;
@@ -129,22 +128,22 @@ public final class PulseAudioMixer implements Mixer {
 
         Map<String, Object> properties;
 
-        /*
-         * frameSize = sample size (in bytes, not bits) x # of channels
-         *
-         * From PulseAudio's sources
-         * http://git.0pointer.de/?p=pulseaudio.git;a=blob
-         * ;f=src/pulse/sample.c;h=93da2465f4301e27af4976e82737c3a048124a68;hb=
-         * 82ea8dde8abc51165a781c69bc3b38034d62d969#l63
-         */
+        //
+        // frameSize = sample size (in bytes, not bits) x # of channels
+        //
+        // From PulseAudio's sources
+        // http://git.0pointer.de/?p=pulseaudio.git;a=blob
+        // ;f=src/pulse/sample.c;h=93da2465f4301e27af4976e82737c3a048124a68;hb=
+        // 82ea8dde8abc51165a781c69bc3b38034d62d969#l63
+        //
 
-        /*
-         * technically, PulseAudio supports up to 16 channels, but things get
-         * interesting with channel maps
-         *
-         * PA_CHANNEL_MAP_DEFAULT (=PA_CHANNEL_MAP_AIFF) supports 1,2,3,4,5 or 6
-         * channels only
-         */
+        //
+        // technically, PulseAudio supports up to 16 channels, but things get
+        // interesting with channel maps
+        //
+        // PA_CHANNEL_MAP_DEFAULT (=PA_CHANNEL_MAP_AIFF) supports 1,2,3,4,5 or 6
+        // channels only
+        //
         int[] channelSizes = new int[] {1, 2, 3, 4, 5, 6};
 
         for (int channelSize : channelSizes) {
@@ -152,13 +151,13 @@ public final class PulseAudioMixer implements Mixer {
             properties.put(PULSEAUDIO_FORMAT_KEY, "PA_SAMPLE_ALAW");
 
             int sampleSize = 8;
-            AudioFormat PA_SAMPLE_ALAW = new AudioFormat(Encoding.ALAW, // encoding
-                    AudioSystem.NOT_SPECIFIED, // sample rate
-                    sampleSize, // sample size
-                    channelSize, // channels
-                    sampleSize / 8 * channelSize, // frame size
-                    AudioSystem.NOT_SPECIFIED, // frame rate
-                    false, // big endian?
+            AudioFormat PA_SAMPLE_ALAW = new AudioFormat(Encoding.ALAW,
+                    AudioSystem.NOT_SPECIFIED,
+                    sampleSize,
+                    channelSize,
+                    sampleSize / 8 * channelSize,
+                    AudioSystem.NOT_SPECIFIED,
+                    false,
                     properties);
 
             supportedFormats.add(PA_SAMPLE_ALAW);
@@ -169,13 +168,13 @@ public final class PulseAudioMixer implements Mixer {
             properties.put(PULSEAUDIO_FORMAT_KEY, "PA_SAMPLE_ULAW");
 
             int sampleSize = 8;
-            AudioFormat PA_SAMPLE_ULAW = new AudioFormat(Encoding.ULAW, // encoding
-                    AudioSystem.NOT_SPECIFIED, // sample rate
-                    sampleSize, // sample size
-                    channelSize, // channels
-                    sampleSize / 8 * channelSize, // frame size
-                    AudioSystem.NOT_SPECIFIED, // frame rate
-                    false, // big endian?
+            AudioFormat PA_SAMPLE_ULAW = new AudioFormat(Encoding.ULAW,
+                    AudioSystem.NOT_SPECIFIED,
+                    sampleSize,
+                    channelSize,
+                    sampleSize / 8 * channelSize,
+                    AudioSystem.NOT_SPECIFIED,
+                    false,
                     properties);
 
             supportedFormats.add(PA_SAMPLE_ULAW);
@@ -187,13 +186,13 @@ public final class PulseAudioMixer implements Mixer {
 
             int sampleSize = 16;
             AudioFormat PA_SAMPLE_S16BE = new AudioFormat(
-                    Encoding.PCM_SIGNED, // encoding
-                    AudioSystem.NOT_SPECIFIED, // sample rate
-                    sampleSize, // sample size
-                    channelSize, // channels
-                    sampleSize / 8 * channelSize, // frame size
-                    AudioSystem.NOT_SPECIFIED, // frame rate
-                    true, // big endian?
+                    Encoding.PCM_SIGNED,
+                    AudioSystem.NOT_SPECIFIED,
+                    sampleSize,
+                    channelSize,
+                    sampleSize / 8 * channelSize,
+                    AudioSystem.NOT_SPECIFIED,
+                    true,
                     properties);
 
             supportedFormats.add(PA_SAMPLE_S16BE);
@@ -205,13 +204,13 @@ public final class PulseAudioMixer implements Mixer {
 
             int sampleSize = 16;
             AudioFormat A_SAMPLE_S16LE = new AudioFormat(
-                    Encoding.PCM_SIGNED, // encoding
-                    AudioSystem.NOT_SPECIFIED, // sample rate
-                    sampleSize, // sample size
-                    channelSize, // channels
-                    sampleSize / 8 * channelSize, // frame size
-                    AudioSystem.NOT_SPECIFIED, // frame rate
-                    false, // big endian?
+                    Encoding.PCM_SIGNED,
+                    AudioSystem.NOT_SPECIFIED,
+                    sampleSize,
+                    channelSize,
+                    sampleSize / 8 * channelSize,
+                    AudioSystem.NOT_SPECIFIED,
+                    false,
                     properties);
 
             supportedFormats.add(A_SAMPLE_S16LE);
@@ -223,13 +222,13 @@ public final class PulseAudioMixer implements Mixer {
 
             int sampleSize = 32;
             AudioFormat PA_SAMPLE_S32BE = new AudioFormat(
-                    Encoding.PCM_SIGNED, // encoding
-                    AudioSystem.NOT_SPECIFIED, // sample rate
-                    sampleSize, // sample size
-                    channelSize, // channels
-                    sampleSize / 8 * channelSize, // frame size
-                    AudioSystem.NOT_SPECIFIED, // frame rate
-                    true, // big endian?
+                    Encoding.PCM_SIGNED,
+                    AudioSystem.NOT_SPECIFIED,
+                    sampleSize,
+                    channelSize,
+                    sampleSize / 8 * channelSize,
+                    AudioSystem.NOT_SPECIFIED,
+                    true,
                     properties);
 
             supportedFormats.add(PA_SAMPLE_S32BE);
@@ -241,13 +240,13 @@ public final class PulseAudioMixer implements Mixer {
 
             int sampleSize = 32;
             AudioFormat PA_SAMPLE_S32LE = new AudioFormat(
-                    Encoding.PCM_SIGNED, // encoding
-                    AudioSystem.NOT_SPECIFIED, // sample rate
-                    sampleSize, // sample size
-                    channelSize, // channels
-                    sampleSize / 8 * channelSize, // frame size
-                    AudioSystem.NOT_SPECIFIED, // frame rate
-                    false, // big endian?
+                    Encoding.PCM_SIGNED,
+                    AudioSystem.NOT_SPECIFIED,
+                    sampleSize,
+                    channelSize,
+                    sampleSize / 8 * channelSize,
+                    AudioSystem.NOT_SPECIFIED,
+                    false,
                     properties);
 
             supportedFormats.add(PA_SAMPLE_S32LE);
@@ -257,14 +256,14 @@ public final class PulseAudioMixer implements Mixer {
             properties = new HashMap<>();
             properties.put(PULSEAUDIO_FORMAT_KEY, "PA_SAMPLE_U8");
 
-            int sampleSize = 8; // in bits
-            AudioFormat PA_SAMPLE_U8 = new AudioFormat(Encoding.PCM_UNSIGNED, // encoding
-                    AudioSystem.NOT_SPECIFIED, // sample rate
-                    sampleSize, // sample size
-                    channelSize, // channels
-                    sampleSize / 8 * channelSize, // frame size in bytes
-                    AudioSystem.NOT_SPECIFIED, // frame rate
-                    false, // big endian?
+            int sampleSize = 8;
+            AudioFormat PA_SAMPLE_U8 = new AudioFormat(Encoding.PCM_UNSIGNED,
+                    AudioSystem.NOT_SPECIFIED,
+                    sampleSize,
+                    channelSize,
+                    sampleSize / 8 * channelSize,
+                    AudioSystem.NOT_SPECIFIED,
+                    false,
                     properties);
 
             supportedFormats.add(PA_SAMPLE_U8);
@@ -308,10 +307,6 @@ public final class PulseAudioMixer implements Mixer {
         }
 
         if ((info.getLineClass() == TargetDataLine.class)) {
-            /* check for permission to record audio */
-            AudioPermission perm = new AudioPermission("record", null);
-            perm.checkGuard(null);
-
             return new PulseAudioTargetDataLine(formats, defaultFormat);
         }
 
@@ -321,10 +316,6 @@ public final class PulseAudioMixer implements Mixer {
 
         if (info instanceof Port.Info portInfo) {
             if (portInfo.isSource()) {
-                /* check for permission to record audio */
-                AudioPermission perm = new AudioPermission("record", null);
-                perm.checkGuard(null);
-
                 return new PulseAudioSourcePort(portInfo.getName());
             } else {
                 return new PulseAudioTargetPort(portInfo.getName());
@@ -393,10 +384,6 @@ public final class PulseAudioMixer implements Mixer {
 
     @Override
     public Line[] getTargetLines() {
-
-        // check for permission to record audio
-        AudioPermission perm = new AudioPermission("record", null);
-        perm.checkGuard(null);
 
         return targetLines.toArray(new Line[0]);
     }
@@ -530,7 +517,6 @@ public final class PulseAudioMixer implements Mixer {
         refreshSourceAndTargetLines();
 
         logger.log(Level.TRACE, "PulseAudioMixer.close(): Mixer closed");
-
     }
 
     @Override
@@ -627,12 +613,10 @@ public final class PulseAudioMixer implements Mixer {
 
         ContextListener generalEventListener = e -> {
             if (e.getType() == ContextEvent.READY) {
-                fireEvent(new LineEvent(PulseAudioMixer.this,
-                        LineEvent.Type.OPEN, AudioSystem.NOT_SPECIFIED));
+                fireEvent(new LineEvent(PulseAudioMixer.this, LineEvent.Type.OPEN, AudioSystem.NOT_SPECIFIED));
             } else if (e.getType() == ContextEvent.FAILED
                     || e.getType() == ContextEvent.TERMINATED) {
-                fireEvent(new LineEvent(PulseAudioMixer.this,
-                        LineEvent.Type.CLOSE, AudioSystem.NOT_SPECIFIED));
+                fireEvent(new LineEvent(PulseAudioMixer.this, LineEvent.Type.CLOSE, AudioSystem.NOT_SPECIFIED));
             }
         };
 

@@ -185,10 +185,8 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
             synchronized (eventLoop.threadLock) {
 
                 do {
-                    synchronized (this) {
-                        if (writeInterrupted) {
-                            return sizeWritten;
-                        }
+                    if (writeInterrupted) {
+                        return sizeWritten;
                     }
 
                     if (availableSize == -1) {
@@ -216,13 +214,11 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
                 // a multiple of frameSize
                 availableSize = (availableSize / frameSize) * frameSize;
 
-                synchronized (this) {
-                    if (writeInterrupted) {
-                        return sizeWritten;
-                    }
-                    /* write a little bit of the buffer */
-                    stream.write(data, position, availableSize);
+                if (writeInterrupted) {
+                    return sizeWritten;
                 }
+                /* write a little bit of the buffer */
+                stream.write(data, position, availableSize);
 
                 sizeWritten += availableSize;
                 position += availableSize;
@@ -271,6 +267,9 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 
     @Override
     public void drain() {
+        if (!isOpen()) {
+            throw new IllegalStateException("line not open");
+        }
 
         synchronized (this) {
             writeInterrupted = true;
@@ -307,20 +306,21 @@ public final class PulseAudioSourceDataLine extends PulseAudioDataLine
 
     @Override
     public void flush() {
+        if (!isOpen()) {
+            throw new IllegalStateException("line not open");
+        }
+
         synchronized (this) {
             writeInterrupted = true;
         }
 
-        if (isOpen()) {
-            Operation operation;
-            synchronized (eventLoop.threadLock) {
-                operation = stream.flush();
-            }
-
-            operation.waitForCompletion();
-            operation.releaseReference();
+        Operation operation;
+        synchronized (eventLoop.threadLock) {
+            operation = stream.flush();
         }
 
+        operation.waitForCompletion();
+        operation.releaseReference();
     }
 
     @Override

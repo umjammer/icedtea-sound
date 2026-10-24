@@ -33,7 +33,7 @@ public class pa_card_port_info extends Structure {
 	 * < \deprecated Superseded by profiles2<br>
 	 * C type : pa_card_profile_info**
 	 */
-	public vavi.sound.pulseaudio.jna.pulseaudio.pa_card_profile_info.ByReference[] profiles;
+	public Pointer profiles;
 	/**
 	 * < Property list<br>
 	 * C type : pa_proplist*
@@ -45,7 +45,7 @@ public class pa_card_port_info extends Structure {
 	 * < Array of pointers to available profiles, or NULL. Array is terminated by an entry set to NULL. \since 5.0<br>
 	 * C type : pa_card_profile_info2**
 	 */
-	public vavi.sound.pulseaudio.jna.pulseaudio.pa_card_profile_info2.ByReference[] profiles2;
+	public Pointer profiles2;
 	/**
 	 * < An indentifier for the group of ports that share their availability status with<br>
 	 * each other. This is meant especially for handling cases where one 3.5 mm connector<br>

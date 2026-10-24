@@ -441,7 +441,7 @@ public class PulseAudioTargetDataLineTest {
     public void testStartedStopped() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException, InterruptedException {
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 

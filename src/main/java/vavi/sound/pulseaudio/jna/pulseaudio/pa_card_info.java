@@ -48,12 +48,12 @@ public class pa_card_info extends Structure {
 	 * < Array of pointers to ports, or NULL. Array is terminated by an entry set to NULL.<br>
 	 * C type : pa_card_port_info**
 	 */
-	public vavi.sound.pulseaudio.jna.pulseaudio.pa_card_port_info.ByReference[] ports;
+	public Pointer ports;
 	/**
 	 * < Array of pointers to available profiles, or NULL. Array is terminated by an entry set to NULL. \since 5.0<br>
 	 * C type : pa_card_profile_info2**
 	 */
-	public vavi.sound.pulseaudio.jna.pulseaudio.pa_card_profile_info2.ByReference[] profiles2;
+	public Pointer profiles2;
 	/**
 	 * < Pointer to active profile in the array, or NULL. \since 5.0<br>
 	 * C type : pa_card_profile_info2*

@@ -85,7 +85,9 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
     protected EventLoop eventLoop = null;
     protected final Semaphore semaphore = new Semaphore(0);
     protected Stream stream;
-    boolean writeInterrupted = false;
+    // volatile, because write() reads this while holding only threadLock.
+    // locking this line there would invert the lock order of stop()
+    volatile boolean writeInterrupted = false;
 
     protected void open(AudioFormat format, int bufferSize)
             throws LineUnavailableException {
@@ -346,9 +348,7 @@ abstract class PulseAudioDataLine extends PulseAudioLine implements DataLine {
     @Override
     public synchronized void stop() {
         if (!isOpen()) {
-            // For some reason, we are being asked to stop a line
-            // that isn't even open.
-            return;
+            throw new IllegalStateException("Line must be open()ed before it can be stop()ed");
         }
         writeInterrupted = true;
         if (!isStarted) {

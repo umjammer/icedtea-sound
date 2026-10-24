@@ -39,7 +39,6 @@ package org.classpath.icedtea.pulseaudio;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
-import javax.sound.sampled.AudioPermission;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.Port;
 import com.sun.jna.ptr.PointerByReference;
@@ -60,14 +59,15 @@ final class PulseAudioSourcePort extends PulseAudioPort {
 
     PulseAudioSourcePort(String name) {
         super(name);
+        init();
     }
 
     @Override
     public void open() {
-
-        /* check for permission to record audio */
-        AudioPermission perm = new AudioPermission("record", null);
-        perm.checkGuard(null);
+        if (isOpen) {
+            // already registered to the mixer
+            return;
+        }
 
         super.open();
 
@@ -77,10 +77,6 @@ final class PulseAudioSourcePort extends PulseAudioPort {
 
     @Override
     public void close() {
-
-        /* check for permission to record audio */
-        AudioPermission perm = new AudioPermission("record", null);
-        perm.checkGuard(null);
 
         if (!isOpen) {
             throw new IllegalStateException("Port is not open; so cant close");

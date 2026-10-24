@@ -45,10 +45,8 @@ import com.sun.jna.ptr.PointerByReference;
 
 import vavi.sound.pulseaudio.jna.pulseaudio.PulseaudioLibrary;
 import vavi.sound.pulseaudio.jna.pulseaudio.PulseaudioLibrary.pa_context_notify_cb_t;
-import vavi.sound.pulseaudio.jna.pulseaudio.PulseaudioLibrary.pa_poll_func;
 import vavi.sound.pulseaudio.jna.pulseaudio.PulseaudioLibrary.pa_sink_info_cb_t;
 import vavi.sound.pulseaudio.jna.pulseaudio.PulseaudioLibrary.pa_source_info_cb_t;
-import vavi.sound.pulseaudio.jna.pulseaudio.SystemLibrary;
 import vavi.sound.pulseaudio.jna.pulseaudio.pa_mainloop_api;
 
 import static java.lang.System.getLogger;
@@ -99,7 +97,7 @@ public final class EventLoop implements Runnable {
     final pa_sink_info_cb_t sink_list_success_cb = (context, i, eol, userdata) -> {
 
         if (eol == 0) {
-            sink_callback(i.name.toString());
+            sink_callback(i.name.getString(0));
         } else {
             synchronized (EventLoop.getEventLoop().threadLock) {
                 EventLoop.getEventLoop().threadLock.notifyAll();
@@ -110,7 +108,7 @@ public final class EventLoop implements Runnable {
     final pa_source_info_cb_t source_list_success_cb = (context, i, eol, userdata) -> {
 
         if (eol == 0) {
-            source_callback(i.name.toString());
+            source_callback(i.name.getString(0));
         } else {
             synchronized (EventLoop.getEventLoop().threadLock) {
                 EventLoop.getEventLoop().threadLock.notifyAll();
@@ -121,22 +119,12 @@ public final class EventLoop implements Runnable {
     private final pa_context_notify_cb_t context_change_callback = (/* pa_context */ context, userdata) -> {
         assert context != null;
 
-        logger.log(Level.TRACE, "context state changed to %d".formatted(PulseaudioLibrary.INSTANCE.pa_context_get_state(new PointerByReference(context))));
+        logger.log(Level.TRACE, "context state changed to %d".formatted(PulseaudioLibrary.INSTANCE.pa_context_get_state(context)));
 
         // Call the EventLoop.update method in java
         // to handle all java-side events
 
-        update(PulseaudioLibrary.INSTANCE.pa_context_get_state(new PointerByReference(context)));
-    };
-
-    private final pa_poll_func poll_function = (ufds, nfds, timeout, userdata) -> {
-
-        Object lockObject = org.classpath.icedtea.pulseaudio.EventLoop.getEventLoop();
-
-        synchronized (lockObject) {
-            int value = SystemLibrary.INSTANCE.poll(ufds, nfds, timeout);
-            return value;
-        }
+        update(PulseaudioLibrary.INSTANCE.pa_context_get_state(context));
     };
 
     private void native_setup(String appName, String server) {
@@ -165,19 +153,24 @@ public final class EventLoop implements Runnable {
             PulseaudioLibrary.INSTANCE.pa_context_connect(context, (String) null, 0, null);
         }
 
-        // set polling function
-        PulseaudioLibrary.INSTANCE.pa_mainloop_set_poll_func(mainloop, poll_function, null);
-
         this.mainloopPointer = mainloop;
         this.contextPointer = context;
         logger.log(Level.TRACE, "native_setup() returning");
     }
 
+    /**
+     * the original jni poll function released the threadLock while polling,
+     * so that other threads can call the pulseaudio api meanwhile. a java
+     * monitor can not be exited inside a synchronized block, so prepare and
+     * dispatch are done holding the threadLock and poll is done without it.
+     */
     private int native_iterate(int timeout) {
 
         int returnval;
 
-        returnval = PulseaudioLibrary.INSTANCE.pa_mainloop_prepare(mainloopPointer, timeout);
+        synchronized (threadLock) {
+            returnval = PulseaudioLibrary.INSTANCE.pa_mainloop_prepare(mainloopPointer, timeout);
+        }
         if (returnval < 0) {
             return -1;
         }
@@ -185,7 +178,9 @@ public final class EventLoop implements Runnable {
         if (returnval < 0) {
             return -1;
         }
-        returnval = PulseaudioLibrary.INSTANCE.pa_mainloop_dispatch(mainloopPointer);
+        synchronized (threadLock) {
+            returnval = PulseaudioLibrary.INSTANCE.pa_mainloop_dispatch(mainloopPointer);
+        }
         if (returnval < 0) {
             return -1;
         }
@@ -193,7 +188,7 @@ public final class EventLoop implements Runnable {
     }
 
     private pa_context_notify_cb_t context_drain_complete_callback = (/* pa_context */ context, userdata) -> {
-        PulseaudioLibrary.INSTANCE.pa_context_disconnect(new PointerByReference(context));
+        PulseaudioLibrary.INSTANCE.pa_context_disconnect(context);
     };
 
     private void native_shutdown() {
@@ -252,11 +247,11 @@ public final class EventLoop implements Runnable {
          * every iteration of the loop might be slow
          */
         while (true) {
-            synchronized (threadLock) {
-                // timeout is in milliseconds
-                // timout = 0 means dont block
-                native_iterate(100);
+            // timeout is in milliseconds
+            // timout = 0 means dont block
+            native_iterate(100);
 
+            synchronized (threadLock) {
                 if (Thread.interrupted()) {
                     native_shutdown();
 

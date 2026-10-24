@@ -58,10 +58,15 @@ final class PulseAudioTargetPort extends PulseAudioPort {
     /** aka speaker */
     PulseAudioTargetPort(String name) {
         super(name);
+        init();
     }
 
     @Override
     public void open() {
+        if (isOpen) {
+            // already registered to the mixer
+            return;
+        }
 
         super.open();
 

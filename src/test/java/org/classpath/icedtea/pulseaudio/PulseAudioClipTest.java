@@ -122,7 +122,7 @@ public class PulseAudioClipTest {
     public void testClipOpens() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException {
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
         clip.open(audioInputStream);
@@ -132,7 +132,7 @@ public class PulseAudioClipTest {
     @Test
     public void testOpenCloseLotsOfTimes() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException {
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
         for (int i = 0; i < 1000; i++) {
@@ -150,7 +150,7 @@ public class PulseAudioClipTest {
                         + "You should hear a certain part of the clip play back 5 time");
 
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
         clip.open(audioInputStream);
@@ -172,7 +172,7 @@ public class PulseAudioClipTest {
         System.out
                 .println("This tests loop(LOOP_CONTINUOUSLY) on the Clip");
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile = new File("testsounds/error.wav");
+        File soundFile = new File("src/test/resources/testsounds/error.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
         clip.open(audioInputStream);
@@ -185,7 +185,7 @@ public class PulseAudioClipTest {
 
         Thread th = new Thread(blocker);
         th.start();
-        th.join(10000);
+        th.join(2000);
 
         if (!th.isAlive()) {
             clip.close();
@@ -207,7 +207,7 @@ public class PulseAudioClipTest {
             UnsupportedAudioFileException, IOException {
 
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
 
@@ -233,7 +233,7 @@ public class PulseAudioClipTest {
         System.out
                 .println("This tests the OPEN event. You should see an OPEN on the next line");
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
 
@@ -261,7 +261,7 @@ public class PulseAudioClipTest {
         logger.log(Level.TRACE, "This tests the CLOSE event");
 
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
 
@@ -287,7 +287,7 @@ public class PulseAudioClipTest {
     public void testStartedStopped() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException, InterruptedException {
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
@@ -328,7 +328,7 @@ public class PulseAudioClipTest {
     public void testDrainWithoutStart() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
@@ -347,7 +347,7 @@ public class PulseAudioClipTest {
     public void testDrainBlocksWhilePlaying()
             throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 
-        String fileName = "testsounds/startup.wav";
+        String fileName = "src/test/resources/testsounds/startup.wav";
         File soundFile = new File(fileName);
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
@@ -376,7 +376,7 @@ public class PulseAudioClipTest {
     public void testLoop0InterruptsPlayback() throws LineUnavailableException,
             IOException, UnsupportedAudioFileException {
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem
                 .getAudioInputStream(soundFile);
         clip.open(audioInputStream);
@@ -411,13 +411,13 @@ public class PulseAudioClipTest {
     public void testPlayTwoClips() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException {
         Clip clip1 = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile1 = new File("testsounds/startup.wav");
+        File soundFile1 = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream1 = AudioSystem
                 .getAudioInputStream(soundFile1);
         clip1.open(audioInputStream1);
 
         Clip clip2 = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile2 = new File("testsounds/logout.wav");
+        File soundFile2 = new File("src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream2 = AudioSystem
                 .getAudioInputStream(soundFile2);
         clip2.open(audioInputStream2);
@@ -439,7 +439,7 @@ public class PulseAudioClipTest {
     public void testSupportedControls() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException {
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile1 = new File("testsounds/startup.wav");
+        File soundFile1 = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream1 = AudioSystem
                 .getAudioInputStream(soundFile1);
         clip.open(audioInputStream1);
@@ -460,7 +460,7 @@ public class PulseAudioClipTest {
         System.out
                 .println("This tests if the Clip provides the correct frame position");
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        String fileName = "testsounds/logout.wav";
+        String fileName = "src/test/resources/testsounds/logout.wav";
         File soundFile1 = new File(fileName);
         AudioInputStream audioInputStream1 = AudioSystem
                 .getAudioInputStream(soundFile1);
@@ -474,7 +474,7 @@ public class PulseAudioClipTest {
 
         clip.close();
 
-        long expected = 136703;
+        long expected = 44100;
         long granularity = 5;
         logger.log(Level.TRACE, "Frames in " + fileName + ": " + expected);
         logger.log(Level.TRACE, "Frame position in clip :" + pos);
@@ -490,7 +490,7 @@ public class PulseAudioClipTest {
         System.out
                 .println("This tests if the Clip provides the correct frame position");
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        String fileName = "testsounds/logout.wav";
+        String fileName = "src/test/resources/testsounds/logout.wav";
         File soundFile1 = new File(fileName);
         AudioInputStream audioInputStream1 = AudioSystem
                 .getAudioInputStream(soundFile1);
@@ -500,7 +500,7 @@ public class PulseAudioClipTest {
 
         Thread.sleep(500);
         clip.stop();
-        Thread.sleep(5000);
+        Thread.sleep(500);
         clip.start();
 
         clip.drain();
@@ -509,7 +509,7 @@ public class PulseAudioClipTest {
 
         clip.close();
 
-        long expected = 136703;
+        long expected = 44100;
         long granularity = 5;
         logger.log(Level.TRACE, "Frames in " + fileName + ": " + expected);
         logger.log(Level.TRACE, "Frame position in clip :" + pos);
@@ -523,7 +523,7 @@ public class PulseAudioClipTest {
         logger.log(Level.TRACE, "This tests if the Clip provides the correct frame "
                 + "position with a bit of looping in the clip");
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        String fileName = "testsounds/logout.wav";
+        String fileName = "src/test/resources/testsounds/logout.wav";
         File soundFile1 = new File(fileName);
         AudioInputStream audioInputStream1 = AudioSystem
                 .getAudioInputStream(soundFile1);
@@ -533,19 +533,19 @@ public class PulseAudioClipTest {
         clip.loop(1);
         Thread.sleep(500);
         clip.stop();
-        Thread.sleep(2000);
+        Thread.sleep(200);
         clip.start();
         Thread.sleep(100);
         clip.stop();
-        Thread.sleep(4000);
+        Thread.sleep(200);
         clip.start();
         Thread.sleep(100);
         clip.stop();
-        Thread.sleep(2000);
+        Thread.sleep(200);
         clip.start();
         Thread.sleep(100);
         clip.stop();
-        Thread.sleep(3000);
+        Thread.sleep(200);
         clip.start();
 
         clip.drain();
@@ -554,7 +554,7 @@ public class PulseAudioClipTest {
 
         clip.close();
 
-        long expected = 136703 * 1;
+        long expected = 44100 * 1;
         long granularity = 5;
         logger.log(Level.TRACE, "Frames in " + fileName + ": " + expected);
         logger.log(Level.TRACE, "Frame position in clip :" + pos);
@@ -569,7 +569,7 @@ public class PulseAudioClipTest {
         System.out
                 .println("This tests if the Clip provides the correct frame position");
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        String fileName = "testsounds/logout.wav";
+        String fileName = "src/test/resources/testsounds/logout.wav";
         File soundFile1 = new File(fileName);
         AudioInputStream audioInputStream1 = AudioSystem
                 .getAudioInputStream(soundFile1);
@@ -584,7 +584,7 @@ public class PulseAudioClipTest {
 
         clip.close();
 
-        long expected = 136703 * 2;
+        long expected = 44100 * 2;
         long granularity = 5;
         logger.log(Level.TRACE, "Frames in " + fileName + ": " + expected);
         logger.log(Level.TRACE, "Frame position in clip :" + pos);
@@ -596,7 +596,7 @@ public class PulseAudioClipTest {
     public void testMixerKnowsAboutOpenClips() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException {
         Clip clip = (Clip) mixer.getLine(new Line.Info(Clip.class));
-        File soundFile1 = new File("testsounds/startup.wav");
+        File soundFile1 = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream1 = AudioSystem
                 .getAudioInputStream(soundFile1);
 

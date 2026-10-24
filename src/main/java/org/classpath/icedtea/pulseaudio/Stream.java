@@ -273,7 +273,7 @@ final class Stream {
     private pa_stream_notify_cb_t stream_state_callback = (/* pa_stream */ stream, userdata) -> {
         logger.log(Level.TRACE, "stream_state_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.stateCallback();
         } else {
             this.stateCallback();
@@ -283,7 +283,7 @@ final class Stream {
     private pa_stream_request_cb_t stream_write_callback = (/* pa_stream */ stream, length, userdata) -> {
         logger.log(Level.TRACE, "stream_write_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.writeCallback();
         } else {
             this.writeCallback();
@@ -293,7 +293,7 @@ final class Stream {
     private pa_stream_request_cb_t stream_read_callback = (/* pa_stream */ stream, length, userdata) -> {
         logger.log(Level.TRACE, "stream_read_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.readCallback();
         } else {
             this.readCallback();
@@ -303,7 +303,7 @@ final class Stream {
     private pa_stream_notify_cb_t stream_overflow_callback = (/* pa_stream */ stream, userdata) -> {
         logger.log(Level.TRACE, "stream_overflow_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.overflowCallback();
         } else {
             this.overflowCallback();
@@ -313,7 +313,7 @@ final class Stream {
     private pa_stream_notify_cb_t stream_underflow_callback = (/* pa_stream */ stream, userdata) -> {
         logger.log(Level.TRACE, "stream_underflow_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.underflowCallback();
         } else {
             this.underflowCallback();
@@ -334,7 +334,7 @@ final class Stream {
     private pa_stream_notify_cb_t stream_started_callback = (/* pa_stream */ stream, userdata) -> {
         logger.log(Level.TRACE, "stream_started_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.playbackStartedCallback();
         } else {
             this.playbackStartedCallback();
@@ -344,7 +344,7 @@ final class Stream {
     private pa_stream_notify_cb_t stream_latency_update_callback = (/* pa_stream */ stream, userdata) -> {
         logger.log(Level.TRACE, "stream_latency_update_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.latencyUpdateCallback();
         } else {
             this.latencyUpdateCallback();
@@ -354,7 +354,7 @@ final class Stream {
     private pa_stream_notify_cb_t stream_moved_callback = (/* pa_stream */ stream, userdata) -> {
         logger.log(Level.TRACE, "stream_moved_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.movedCallback();
         } else {
             this.movedCallback();
@@ -364,7 +364,7 @@ final class Stream {
     private pa_stream_notify_cb_t stream_suspended_callback = (/* pa_stream */ stream, userdata) -> {
         logger.log(Level.TRACE, "stream_suspended_callback called");
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.suspendedCallback();
         } else {
             this.suspendedCallback();
@@ -373,7 +373,7 @@ final class Stream {
 
     private pa_stream_notify_cb_t buf_attr_changed_callback = (/* pa_stream */ stream, userdata) -> {
 
-        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(new PointerByReference(stream)) == pa_stream_state.PA_STREAM_CREATING) {
+        if (PulseaudioLibrary.INSTANCE.pa_stream_get_state(stream) == pa_stream_state.PA_STREAM_CREATING) {
             this.bufferAttrCallback();
         } else {
             this.bufferAttrCallback();
@@ -538,9 +538,13 @@ final class Stream {
     private int native_pa_stream_write(byte[] data, int offset, int length) {
         PointerByReference /* pa_stream */ stream = this.streamPointer;
         assert stream != null;
+        if (length == 0) {
+            return 0;
+        }
         Memory data_buffer = new Memory(length);
-        data_buffer.read(0L, data, offset, length);
-        int value = PulseaudioLibrary.INSTANCE.pa_stream_write(stream, data_buffer.getPointer(0), new NativeLong(length), null, 0, PA_SEEK_RELATIVE);
+        data_buffer.write(0L, data, offset, length);
+        // free_cb is null, so pulseaudio copies the data before returning
+        int value = PulseaudioLibrary.INSTANCE.pa_stream_write(stream, data_buffer, new NativeLong(length), null, 0, PA_SEEK_RELATIVE);
         return value;
     }
 
@@ -556,11 +560,12 @@ final class Stream {
         }
 
         /* no data available */
-        if (startLocation == null) {
+        if (startLocation.getValue() == null) {
             return null;
         }
         int length = count.getValue().intValue();
         byte[] data = new byte[length];
+        startLocation.getValue().read(0L, data, 0, length);
         return data;
     }
 

@@ -79,8 +79,8 @@ public class PulseAudioSourceDataLineTest {
     SourceDataLine sourceDataLine;
     private int listenerCalled = 0;
 
-    int started = 0;
-    int stopped = 0;
+    volatile int started = 0;
+    volatile int stopped = 0;
     int opened = 0;
     int closed = 0;
 
@@ -199,7 +199,7 @@ public class PulseAudioSourceDataLineTest {
     public void testPlay() throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         logger.log(Level.TRACE, "This test plays a file");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -300,7 +300,7 @@ public class PulseAudioSourceDataLineTest {
 
         System.out.println("This test doesn't play a file; you shouldn't hear anything");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -349,7 +349,7 @@ public class PulseAudioSourceDataLineTest {
             IOException, LineUnavailableException, InterruptedException {
         logger.log(Level.TRACE, "This test tires to close the line during a write");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -390,7 +390,7 @@ public class PulseAudioSourceDataLineTest {
             IOException, LineUnavailableException, InterruptedException {
         logger.log(Level.TRACE, "This test tires to stop the line during a write");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -435,7 +435,7 @@ public class PulseAudioSourceDataLineTest {
 
         logger.log(Level.TRACE, "This test tries to flush a line during a write");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -481,7 +481,7 @@ public class PulseAudioSourceDataLineTest {
 
         System.out.println("This test check START/STOP events. You should see 1 START and 1 STOP event");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -531,7 +531,7 @@ public class PulseAudioSourceDataLineTest {
 
         System.out.println("This test checks if START and STOP notifications appear on corking");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -556,13 +556,17 @@ public class PulseAudioSourceDataLineTest {
         writer.start();
         //logger.log(Level.TRACE, "started");
 
+        // playback may start late (e.g. while a suspended sink resumes)
+        for (int i = 0; i < 50 && started == 0; i++) {
+            Thread.sleep(100);
+        }
         Thread.sleep(1000);
 
         sourceDataLine.stop();
 
         logger.log(Level.TRACE, "corked");
 
-        Thread.sleep(5000);
+        Thread.sleep(500);
 
         // UNCORK
 
@@ -583,7 +587,7 @@ public class PulseAudioSourceDataLineTest {
 
         System.out.println("This test checks if START and STOP notifications appear on corking");
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -608,6 +612,10 @@ public class PulseAudioSourceDataLineTest {
         writer.start();
         //logger.log(Level.TRACE, "started");
 
+        // playback may start late (e.g. while a suspended sink resumes)
+        for (int i = 0; i < 50 && started == 0; i++) {
+            Thread.sleep(100);
+        }
         Thread.sleep(1000);
 
         sourceDataLine.stop();
@@ -657,7 +665,7 @@ public class PulseAudioSourceDataLineTest {
     public void testPlayLessThanFrameSize() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException {
         assertThrows(IllegalArgumentException.class, () -> {
-            File soundFile = new File("testsounds/startup.wav");
+            File soundFile = new File("src/test/resources/testsounds/startup.wav");
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
             AudioFormat audioFormat = audioInputStream.getFormat();
             // the audio file must have an even number of channels
@@ -688,7 +696,7 @@ public class PulseAudioSourceDataLineTest {
         // to get the line in the first place
         //
 
-        File soundFile = new File("testsounds/startup.wav");
+        File soundFile = new File("src/test/resources/testsounds/startup.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -752,7 +760,7 @@ public class PulseAudioSourceDataLineTest {
         sourceDataLine = (SourceDataLine) selectedMixer.getLine(new Line.Info(SourceDataLine.class));
 
         File soundFile = new File(new java.io.File(".").getCanonicalPath()
-                + "/testsounds/logout.wav");
+                + "/src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -786,7 +794,7 @@ public class PulseAudioSourceDataLineTest {
         sourceDataLine = (SourceDataLine) selectedMixer.getLine(new Line.Info(SourceDataLine.class));
 
         File soundFile = new File(new java.io.File(".").getCanonicalPath()
-                + "/testsounds/logout.wav");
+                + "/src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -865,7 +873,7 @@ public class PulseAudioSourceDataLineTest {
     @Test
     public void testFramePosition() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
-        File soundFile = new File("testsounds/logout.wav");
+        File soundFile = new File("src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -888,7 +896,7 @@ public class PulseAudioSourceDataLineTest {
         sourceDataLine.drain();
         sourceDataLine.stop();
         logger.log(Level.TRACE, "frame position: " + sourceDataLine.getFramePosition());
-        long expected = 136703;
+        long expected = 44100;
         long granularity = 100;
         long pos = sourceDataLine.getFramePosition();
         assertTrue(Math.abs(expected - pos) < granularity);
@@ -898,7 +906,7 @@ public class PulseAudioSourceDataLineTest {
     @Test
     public void testFramePositionAfterPlayingTwice()
             throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        File soundFile = new File("testsounds/logout.wav");
+        File soundFile = new File("src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -921,7 +929,7 @@ public class PulseAudioSourceDataLineTest {
         sourceDataLine.drain();
         sourceDataLine.stop();
 
-        soundFile = new File("testsounds/logout.wav");
+        soundFile = new File("src/test/resources/testsounds/logout.wav");
         audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         audioFormat = audioInputStream.getFormat();
 
@@ -941,7 +949,7 @@ public class PulseAudioSourceDataLineTest {
         sourceDataLine.stop();
 
         logger.log(Level.TRACE, "frame position: " + sourceDataLine.getFramePosition());
-        long expected = 136703 * 2;
+        long expected = 44100 * 2;
         long granularity = 100;
         long pos = sourceDataLine.getFramePosition();
         assertTrue(Math.abs(expected - pos) < granularity);
@@ -952,7 +960,7 @@ public class PulseAudioSourceDataLineTest {
     public void testMicroSecondPosition() throws UnsupportedAudioFileException,
             IOException, LineUnavailableException {
 
-        File soundFile = new File("testsounds/logout.wav");
+        File soundFile = new File("src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -975,7 +983,7 @@ public class PulseAudioSourceDataLineTest {
         sourceDataLine.drain();
         sourceDataLine.stop();
         logger.log(Level.TRACE, "time position: " + sourceDataLine.getMicrosecondPosition());
-        long expected = 6200;
+        long expected = 2000000;
         long granularity = 100;
         long pos = sourceDataLine.getMicrosecondPosition();
         assertTrue(Math.abs(expected - pos) < granularity);
@@ -1036,7 +1044,7 @@ public class PulseAudioSourceDataLineTest {
     public void testDrainWithoutStartDataOnTheLine() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException, InterruptedException {
 
-        File soundFile = new File("testsounds/logout.wav");
+        File soundFile = new File("src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -1080,7 +1088,7 @@ public class PulseAudioSourceDataLineTest {
     public void testDrainWithoutStartNoDataOnTheLine() throws LineUnavailableException,
             UnsupportedAudioFileException, IOException, InterruptedException {
 
-        File soundFile = new File("testsounds/logout.wav");
+        File soundFile = new File("src/test/resources/testsounds/logout.wav");
         AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         AudioFormat audioFormat = audioInputStream.getFormat();
 
@@ -1202,7 +1210,7 @@ public class PulseAudioSourceDataLineTest {
 
         mixer.open();
 
-        String fileName1 = "testsounds/startup.wav";
+        String fileName1 = "src/test/resources/testsounds/startup.wav";
         File soundFile1 = new File(fileName1);
         AudioInputStream audioInputStream1 = AudioSystem.getAudioInputStream(soundFile1);
 
@@ -1210,7 +1218,7 @@ public class PulseAudioSourceDataLineTest {
         line1 = (PulseAudioSourceDataLine) mixer.getLine(new Line.Info(SourceDataLine.class));
         line1.setName("Line 1");
 
-        String fileName2 = "testsounds/logout.wav";
+        String fileName2 = "src/test/resources/testsounds/logout.wav";
         File soundFile = new File(fileName2);
         AudioInputStream audioInputStream2 = AudioSystem.getAudioInputStream(soundFile);
 

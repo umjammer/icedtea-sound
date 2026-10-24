@@ -60,13 +60,21 @@ abstract class PulseAudioPort extends PulseAudioLine implements Port, PulseAudio
 
     private float cachedVolume;
 
-    private final PulseAudioVolumeControl volumeControl;
+    private PulseAudioVolumeControl volumeControl;
 
     PulseAudioPort(String portName) {
         this.name = portName;
         this.eventLoop = EventLoop.getEventLoop();
         this.contextPointer = eventLoop.getContextPointer();
+    }
 
+    /**
+     * must be called at the end of subclass constructors, because native
+     * callbacks used by {@link #native_update_volume()} and
+     * {@link #native_set_volume(float)} are subclass fields, those are not
+     * initialized yet while this class's constructor is running.
+     */
+    protected void init() {
         updateVolumeInfo();
 
         volumeControl = new PulseAudioVolumeControl(this, eventLoop);
