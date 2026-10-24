@@ -1,7 +1,7 @@
 [![Release](https://jitpack.io/v/umjammer/icedtea-sound.svg)](https://jitpack.io/#umjammer/icedtea-sound)
 [![Java CI](https://github.com/umjammer/icedtea-sound/actions/workflows/maven.yml/badge.svg)](https://github.com/umjammer/icedtea-sound/actions/workflows/maven.yml)
 [![CodeQL](https://github.com/umjammer/icedtea-sound/actions/workflows/codeql.yml/badge.svg)](https://github.com/umjammer/icedtea-sound/actions/workflows/codeql.yml)
-![Java](https://img.shields.io/badge/Java-17-b07219)
+![Java](https://img.shields.io/badge/Java-25-b07219)
 
 # icedtea-sound
 
