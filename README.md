@@ -5,6 +5,8 @@
 
 # icedtea-sound
 
+<img alt="logo" src="src/test/resources/duke_pulsaudio.png" width="160" />
+
 ♬ Java Sound SPI for PulseAudio
 
 ## Install
@@ -79,3 +81,7 @@ They are licensed by the copyright holders as GPLv2.
 The sound file error.wav is part of gnome-audio
 http://ftp.gnome.org/pub/gnome/sources/gnome-audio/2.22/gnome-audio-2.22.2.tar.bz2
 It is licensed under the LGPL by the copyright holders.
+
+---
+
+<sub>image designed by @umjammer, drawn by nano banana</sub>
