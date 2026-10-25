@@ -5,7 +5,7 @@
 
   <groupId>icedtea</groupId>
   <artifactId>icedtea-sound</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.2</version>
 
   <properties>
     <jnaerator.version>0.12</jnaerator.version>
