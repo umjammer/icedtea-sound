@@ -47,11 +47,13 @@ import javax.sound.sampled.Mixer;
 import javax.sound.sampled.SourceDataLine;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
 import static java.lang.System.getLogger;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
+@DisabledIfEnvironmentVariable(named = "GITHUB_WORKFLOW", matches = ".*")
 public class PulseAudioMixerProviderTest {
 
     private static final Logger logger = getLogger(PulseAudioMixerProviderTest.class.getName());

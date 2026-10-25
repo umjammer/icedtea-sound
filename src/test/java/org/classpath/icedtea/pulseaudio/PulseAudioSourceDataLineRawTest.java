@@ -57,12 +57,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
 import static java.lang.System.getLogger;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
+@DisabledIfEnvironmentVariable(named = "GITHUB_WORKFLOW", matches = ".*")
 public class PulseAudioSourceDataLineRawTest {
 
     private static final Logger logger = getLogger(PulseAudioSourceDataLineRawTest.class.getName());

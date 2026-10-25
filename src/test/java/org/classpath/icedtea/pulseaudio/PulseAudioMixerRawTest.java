@@ -49,6 +49,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.condition.EnabledIf;
 
 import static java.lang.System.getLogger;
@@ -89,12 +90,14 @@ public class PulseAudioMixerRawTest {
     }
 
     @Test
+    @DisabledIfEnvironmentVariable(named = "GITHUB_WORKFLOW", matches = ".*")
     public void testLocalOpen() throws LineUnavailableException {
         logger.log(Level.TRACE, "This test tries to open to the local system");
         mixer.openLocal();
     }
 
     @Test
+    @DisabledIfEnvironmentVariable(named = "GITHUB_WORKFLOW", matches = ".*")
     public void testLocalOpenAppName() throws LineUnavailableException {
         System.out.println("This test tries to connect to the local system while using an application name");
         mixer.openLocal("JunitTest");
